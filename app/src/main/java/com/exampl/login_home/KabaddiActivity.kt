@@ -3,6 +3,7 @@ package com.exampl.login_home
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +16,7 @@ import com.exampl.login_home.R
 import com.exampl.login_home.ScoreViewModel
 
 class KabaddiActivity : AppCompatActivity() {
-    private lateinit var binding:ActivityKabaddiBinding
+    private lateinit var binding: ActivityKabaddiBinding
     val viewModel: ScoreViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +24,7 @@ class KabaddiActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         setContentView(R.layout.activity_kabaddi)
-        binding  = DataBindingUtil.setContentView(this, R.layout.activity_kabaddi)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_kabaddi)
         binding.lifecycleOwner = this
         binding.scoreViewModel = viewModel
 
@@ -33,27 +34,35 @@ class KabaddiActivity : AppCompatActivity() {
             insets
         }
 
-        viewModel.scoreA.observe(this, Observer{ scoreA ->
+        viewModel.scoreA.observe(this, Observer { scoreA ->
             binding.skorA.text = scoreA.toString()
+            if (scoreA >= 25) {
+                Toast.makeText(this, "Tim A Menang!", Toast.LENGTH_LONG).show()
+                viewModel.resetSkor()
+            }
         })
 
-        viewModel.scoreB.observe(this, Observer{ scoreB ->
+        viewModel.scoreB.observe(this, Observer { scoreB ->
             binding.skorB.text = scoreB.toString()
+            if (scoreB >= 25) {
+                Toast.makeText(this, "Tim B Menang!", Toast.LENGTH_LONG).show()
+                viewModel.resetSkor()
+            }
         })
 
-        binding.tambah1a.setOnClickListener {viewModel.incrementSkorA()}
+        binding.tambah1a.setOnClickListener { viewModel.incrementSkorA() }
         binding.tambah2a.setOnClickListener {
             viewModel.incrementSkorA()
             viewModel.incrementSkorA()
         }
 
-        binding.tambah1b.setOnClickListener {viewModel.incrementSkorB()}
+        binding.tambah1b.setOnClickListener { viewModel.incrementSkorB() }
         binding.tambah2b.setOnClickListener {
             viewModel.incrementSkorB()
             viewModel.incrementSkorB()
         }
 
-        binding.btnreset.setOnClickListener {viewModel.resetSkor()}
-
+        binding.btnreset.setOnClickListener { viewModel.resetSkor() }
     }
 }
+
